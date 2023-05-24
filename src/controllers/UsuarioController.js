@@ -11,6 +11,17 @@ const listar = async (req, res) => {
     }
 }
 
+const listarPorId = async (req, res) => {
+    const { id } = req.params
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id
+        }
+    })
+
+    return res.json(user)
+}
 
 
 const criar = async (req, res) => {
@@ -24,15 +35,47 @@ const criar = async (req, res) => {
         }
     })
 
+    return res.json(user)
+}
 
+const alterar = async (req, res) => {
+    const { id } = req.params
+
+    const user = await prisma.user.update({
+        where:{
+            id
+        }
+    })
 
     return res.json(user)
+}
+
+const deletar = async (req, res) => {
+    const { id } = req.params
+
+    const user = await prisma.user.delete({
+        where: {
+            id
+        }
+    })
+    if (id != null) {
+        res.send({
+            message: "Usuário deletado com sucesso!",
+            user: user
+        })
+    } else {
+        res.send({ message: "Usuário não encontrado!" })
+    }
+
 }
 
 
 const usuarioController = {
     listar,
-    criar
+    listarPorId,
+    criar,
+    alterar,
+    deletar
 }
 
 export default usuarioController
